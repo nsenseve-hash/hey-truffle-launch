@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HeyTruffle — Estrategia Social · Folklore</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0d0a14;
+    --bg2: #130f1e;
+    --bg3: #1a1428;
+    --surface: #1e1830;
+    --surface2: #251e3a;
+    --border: rgba(255,255,255,0.08);
+    --border2: rgba(255,255,255,0.14);
+    --text: #f0eef8;
+    --text2: #a89fc4;
+    --text3: #6b6080;
+    --grad: linear-gradient(135deg, #c44bff 0%, #ff8c42 100%);
+    --grad2: linear-gradient(135deg, #9b35d4 0%, #e8752a 100%);
+    --purple: #a855f7;
+    --orange: #f97316;
+    --accent-bg: rgba(168,85,247,0.12);
+    --accent-border: rgba(168,85,247,0.3);
+  }
+
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; font-size: 15px; line-height: 1.6; min-height: 100vh; }
+
+  /* LAYOUT */
+  .container { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+
+  /* TOP NAV */
+  .topnav { position: sticky; top: 0; z-index: 100; background: rgba(13,10,20,0.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 0 24px; }
+  .topnav-inner { max-width: 900px; margin: 0 auto; display: flex; align-items: center; gap: 4px; overflow-x: auto; scrollbar-width: none; height: 52px; }
+  .topnav-inner::-webkit-scrollbar { display: none; }
+  .nav-btn { background: none; border: none; color: var(--text3); font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 500; padding: 6px 14px; border-radius: 6px; cursor: pointer; white-space: nowrap; transition: all 0.2s; }
+  .nav-btn:hover { color: var(--text2); background: rgba(255,255,255,0.05); }
+  .nav-btn.active { color: var(--text); background: var(--surface); }
+
+  /* HERO */
+  .hero { padding: 72px 0 56px; border-bottom: 1px solid var(--border); }
+  .hero-pill { display: inline-flex; align-items: center; gap: 8px; background: var(--accent-bg); border: 1px solid var(--accent-border); border-radius: 20px; padding: 5px 14px; font-size: 12px; font-weight: 500; color: var(--purple); margin-bottom: 20px; }
+  .hero h1 { font-size: clamp(32px, 5vw, 52px); font-weight: 800; line-height: 1.1; letter-spacing: -0.03em; margin-bottom: 16px; }
+  .hero h1 span { background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .hero-sub { font-size: 15px; color: var(--text2); max-width: 580px; line-height: 1.7; margin-bottom: 28px; }
+  .hero-meta { display: flex; flex-wrap: wrap; gap: 20px; }
+  .meta-item { font-size: 12px; color: var(--text3); }
+  .meta-item strong { color: var(--text2); font-weight: 500; }
+
+  /* SECTIONS */
+  .section { padding: 56px 0; border-bottom: 1px solid var(--border); display: none; }
+  .section.active { display: block; }
+  .sec-eyebrow { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 8px; }
+  .sec-title { font-size: clamp(22px, 3vw, 30px); font-weight: 800; letter-spacing: -0.02em; margin-bottom: 10px; line-height: 1.2; }
+  .sec-desc { font-size: 14px; color: var(--text2); max-width: 620px; line-height: 1.75; margin-bottom: 36px; }
+
+  /* CARDS */
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 24px; }
+  .card-sm { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 18px 20px; }
+  .card-accent { background: var(--surface); border: 1px solid var(--accent-border); border-radius: 14px; padding: 24px; }
+
+  /* GRID */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+
+  /* DIVIDER */
+  .divider { height: 1px; background: var(--border); margin: 24px 0; }
+
+  /* LABELS */
+  .label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.09em; color: var(--text3); margin-bottom: 6px; }
+  .label-val { font-size: 13px; color: var(--text2); line-height: 1.6; }
+
+  /* BADGES */
+  .badge { display: inline-block; font-size: 10px; font-weight: 600; padding: 3px 10px; border-radius: 20px; }
+  .badge-reach { background: rgba(29,158,117,0.15); color: #4dd4a0; }
+  .badge-conv { background: rgba(55,138,221,0.15); color: #70b8f5; }
+  .badge-brand { background: rgba(249,115,22,0.18); color: #fba96a; }
+  .badge-engage { background: rgba(168,85,247,0.15); color: #c084fc; }
+  .badge-rec { background: var(--grad); color: #fff; font-size: 10px; }
+
+  /* OBS */
+  .obs { border-left: 2px solid; padding: 14px 16px; border-radius: 0 8px 8px 0; margin-bottom: 12px; }
+  .obs.green { border-color: #4dd4a0; background: rgba(29,158,117,0.06); }
+  .obs.amber { border-color: #fba96a; background: rgba(249,115,22,0.06); }
+  .obs.red { border-color: #f87171; background: rgba(239,68,68,0.06); }
+  .obs .obs-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 5px; }
+  .obs.green .obs-label { color: #4dd4a0; }
+  .obs.amber .obs-label { color: #fba96a; }
+  .obs.red .obs-label { color: #f87171; }
+  .obs p { font-size: 13px; color: var(--text2); line-height: 1.7; }
+
+  /* PILAR */
+  .pilar { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 24px; margin-bottom: 14px; }
+  .pilar-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 6px; gap: 12px; }
+  .pilar-num { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.09em; color: var(--text3); }
+  .pilar-pct { font-size: 32px; font-weight: 800; letter-spacing: -0.03em; background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1; }
+  .pilar-name { font-size: 18px; font-weight: 700; margin-bottom: 8px; letter-spacing: -0.01em; }
+  .pilar-desc { font-size: 13px; color: var(--text2); line-height: 1.7; margin-bottom: 18px; }
+  .pilar-divider { height: 1px; background: var(--border); margin: 16px 0; }
+  .ex-grid { display: flex; flex-direction: column; gap: 8px; }
+  .ex-row { display: grid; grid-template-columns: 90px 1fr; gap: 12px; align-items: start; }
+  .ex-fmt { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text3); padding-top: 2px; }
+  .ex-txt { font-size: 13px; color: var(--text2); line-height: 1.6; }
+  .tag-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
+  .tag { font-size: 10px; background: var(--surface2); border: 1px solid var(--border2); border-radius: 20px; padding: 3px 10px; color: var(--text3); }
+
+  /* MIX BARS */
+  .mix-bar-wrap { display: flex; flex-direction: column; gap: 10px; margin-bottom: 28px; }
+  .mix-bar-row { display: grid; grid-template-columns: 180px 1fr 40px; gap: 12px; align-items: center; }
+  .mix-bar-label { font-size: 13px; color: var(--text2); }
+  .mix-bar-track { height: 6px; background: var(--surface2); border-radius: 3px; overflow: hidden; }
+  .mix-bar-fill { height: 100%; border-radius: 3px; background: var(--grad); }
+  .mix-bar-pct { font-size: 13px; font-weight: 700; color: var(--text); text-align: right; }
+
+  /* DONUT */
+  .charts-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin-bottom: 28px; }
+  .chart-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 18px; }
+  .chart-card h3 { font-size: 13px; font-weight: 700; margin-bottom: 2px; }
+  .chart-role { font-size: 11px; color: var(--text3); margin-bottom: 14px; }
+  .donut-wrap { display: flex; justify-content: center; margin-bottom: 12px; }
+  .leg { display: flex; flex-direction: column; gap: 5px; }
+  .leg-item { display: flex; align-items: center; gap: 7px; font-size: 11px; color: var(--text2); }
+  .leg-dot { width: 7px; height: 7px; border-radius: 2px; flex-shrink: 0; }
+  .leg-pct { margin-left: auto; font-weight: 700; color: var(--text); font-size: 11px; }
+
+  /* CANAL */
+  .canal { border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin-bottom: 12px; }
+  .canal-head { background: var(--surface2); padding: 14px 20px; display: flex; justify-content: space-between; align-items: center; }
+  .canal-head-name { font-size: 14px; font-weight: 700; }
+  .canal-head-role { font-size: 11px; color: var(--text3); }
+  .canal-body { padding: 18px 20px; }
+  .canal-meta { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin-bottom: 16px; }
+  .canal-ex { display: flex; flex-direction: column; gap: 6px; }
+  .canal-ex-item { font-size: 12px; color: var(--text2); padding-left: 12px; border-left: 1.5px solid rgba(168,85,247,0.4); line-height: 1.55; }
+
+  /* CONCEPTO */
+  .concepto { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 24px; margin-bottom: 12px; }
+  .concepto.rec { border-color: var(--accent-border); }
+  .concepto-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; gap: 12px; }
+  .concepto-num { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.09em; color: var(--text3); }
+  .concepto-slogan { font-size: 22px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.2; margin-bottom: 12px; }
+  .concepto-why { font-size: 13px; color: var(--text2); line-height: 1.7; }
+  .concepto-tone { font-size: 11px; color: var(--text3); margin-top: 10px; font-style: italic; }
+
+  /* MSG */
+  .msg { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px 22px; margin-bottom: 10px; }
+  .msg-aud { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.09em; color: var(--text3); margin-bottom: 6px; }
+  .msg-headline { font-size: 16px; font-weight: 700; margin-bottom: 8px; line-height: 1.3; letter-spacing: -0.01em; }
+  .msg-body { font-size: 13px; color: var(--text2); line-height: 1.7; margin-bottom: 8px; }
+  .msg-fmt { font-size: 11px; color: var(--text3); }
+
+  /* PAID TABLE */
+  .ptable { width: 100%; border-collapse: collapse; font-size: 13px; margin: 20px 0; }
+  .ptable th { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text3); text-align: left; padding: 0 12px 10px 0; border-bottom: 1px solid var(--border); }
+  .ptable td { padding: 12px 12px 12px 0; border-bottom: 1px solid var(--border); color: var(--text2); vertical-align: top; line-height: 1.55; }
+  .ptable td:first-child { font-weight: 600; color: var(--text); }
+
+  /* PHASE */
+  .phase-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-bottom: 24px; }
+  .phase-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 18px; }
+  .phase-num { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.09em; color: var(--text3); margin-bottom: 6px; }
+  .phase-title { font-size: 14px; font-weight: 700; margin-bottom: 8px; }
+  .phase-body { font-size: 12px; color: var(--text2); line-height: 1.65; }
+
+  /* GRAD TEXT */
+  .grad-text { background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+
+  @media (max-width: 600px) {
+    .charts-row { grid-template-columns: 1fr; }
+    .grid-2 { grid-template-columns: 1fr; }
+    .grid-3 { grid-template-columns: 1fr 1fr; }
+    .canal-meta { grid-template-columns: 1fr 1fr; }
+    .phase-grid { grid-template-columns: 1fr; }
+    .mix-bar-row { grid-template-columns: 140px 1fr 36px; }
+    .ex-row { grid-template-columns: 70px 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP NAV -->
+<nav class="topnav">
+  <div class="topnav-inner">
+    <button class="nav-btn active" onclick="showSection('mix')">Mix de contenido</button>
+    <button class="nav-btn" onclick="showSection('pilares')">Pilares</button>
+    <button class="nav-btn" onclick="showSection('canales')">Canales</button>
+    <button class="nav-btn" onclick="showSection('mensajes')">Mensajes</button>
+    <button class="nav-btn" onclick="showSection('conceptos')">Conceptos de campaña</button>
+    <button class="nav-btn" onclick="showSection('rebrand')">Rebrand launch</button>
+    <button class="nav-btn" onclick="showSection('paid')">Paid media</button>
+    <button class="nav-btn" onclick="showSection('obs')">Observaciones</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="container">
+    <div class="hero-pill">🍄 HeyTruffle · Propuesta Folklore</div>
+    <h1>Estrategia de contenido<br><span>& canales sociales</span></h1>
+    <p class="hero-sub">Complemento profesional a la estrategia base. Define tipos de contenido, pilares con ejemplos concretos, distribución por canal, mensajes clave, concepto de campaña y análisis de paid media.</p>
+    <div class="hero-meta">
+      <div class="meta-item"><strong>Mercado</strong> · US — Miami, Atlanta, LA</div>
+      <div class="meta-item"><strong>Launch</strong> · Primera semana julio 2026</div>
+      <div class="meta-item"><strong>Rebrand</strong> · RestoHost → HeyTruffle</div>
+      <div class="meta-item"><strong>Agencia</strong> · Folklore</div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION: MIX -->
+<section class="section active" id="sec-mix">
+<div class="container">
+  <div class="sec-eyebrow">Nuestra propuesta</div>
+  <h2 class="sec-title">Mix de contenido revisado</h2>
+  <p class="sec-desc">La estrategia base asigna 25% al contenido educativo. Nuestra lectura: el operador que es nuestro cliente ya vive ese problema todos los días. No necesita que se lo enseñen — necesita ver que alguien más lo resolvió y que el producto funciona.</p>
+
+  <div class="mix-bar-wrap">
+    <div class="mix-bar-row">
+      <div class="mix-bar-label">Social proof / Operator stories</div>
+      <div class="mix-bar-track"><div class="mix-bar-fill" style="width:30%"></div></div>
+      <div class="mix-bar-pct">30%</div>
+    </div>
+    <div class="mix-bar-row">
+      <div class="mix-bar-label">Product in action</div>
+      <div class="mix-bar-track"><div class="mix-bar-fill" style="width:25%"></div></div>
+      <div class="mix-bar-pct">25%</div>
+    </div>
+    <div class="mix-bar-row">
+      <div class="mix-bar-label">Founder voice / Lucas</div>
+      <div class="mix-bar-track"><div class="mix-bar-fill" style="width:20%"></div></div>
+      <div class="mix-bar-pct">20%</div>
+    </div>
+    <div class="mix-bar-row">
+      <div class="mix-bar-label">The phone problem</div>
+      <div class="mix-bar-track"><div class="mix-bar-fill" style="width:15%"></div></div>
+      <div class="mix-bar-pct">15%</div>
+    </div>
+    <div class="mix-bar-row">
+      <div class="mix-bar-label">Industry & trends</div>
+      <div class="mix-bar-track"><div class="mix-bar-fill" style="width:10%"></div></div>
+      <div class="mix-bar-pct">10%</div>
+    </div>
+  </div>
+
+  <div class="grid-2" style="margin-bottom:28px;">
+    <div class="obs amber">
+      <div class="obs-label">Por qué bajamos educativo a 15%</div>
+      <p>El pilar "The Phone Problem" es un excelente hook para audiencias frías. Pero si domina el feed, la cuenta se convierte en canal de problema, no de solución. Con 15% sigue siendo el anzuelo de awareness. El 30% de social proof hace el trabajo de conversión.</p>
+    </div>
+    <div class="obs green">
+      <div class="obs-label">Por qué subimos social proof a 30%</div>
+      <p>En ventas B2B de nicho, nada convierte más rápido que ver a alguien exactamente igual a vos diciendo que funciona. El arquetipo 2 necesita datos reales. El arquetipo 3 necesita verse reflejado. El social proof habla a los dos.</p>
+    </div>
+  </div>
+
+  <div class="sec-eyebrow">Distribución por canal</div>
+  <h2 class="sec-title" style="font-size:22px; margin-bottom:10px;">Cada plataforma tiene su propio mix</h2>
+  <p class="sec-desc">El contenido no se repropone igual en todos los canales. La audiencia, el formato y el momento de consumo son distintos.</p>
+
+  <div class="charts-row">
+    <div class="chart-card">
+      <h3>Instagram</h3>
+      <div class="chart-role">Reach + brand + social proof</div>
+      <div class="donut-wrap">
+        <svg width="90" height="90" viewBox="0 0 100 100">
+          <circle cx="50" cy="50" r="35" fill="none" stroke="#5DCAA5" stroke-width="15" stroke-dasharray="65.97 153.95" stroke-dashoffset="0" transform="rotate(-90 50 50)"/>
+          <circle cx="50" cy="50" r="35" fill="none" stroke="#85B7EB" stroke-width="15" stroke-dasharray="54.97 164.94" stroke-dashoffset="-65.97" transform="rotate(-90 50 50)"/>
+          <circle cx="50" cy="50" r="35" fill="none" stroke="#FAC775" stroke-width="15" stroke-dasharray="43.98 175.93" stroke-dashoffset="-120.94" transform="rotate(-90 50 50)"/>
+          <circle cx="50" cy="50" r="35" fill="none" stroke="#AFA9EC" stroke-width="15" stroke-dasharray="32.99 186.92" stroke-dashoffset="-164.92" transform="rotate(-90 50 50)"/>
+          <circle cx="50" cy="50" r="35" fill="none" stroke="#444441" stroke-width="15" stroke-dasharray="22.0 197.91" stroke-dashoffset="-197.91" transform="rotate(-90 50 50)"/>
+          <circle cx="50" cy="50" r="24" fill="#1e1830"/>
+        </svg>
+      </div>
+      <div class="leg">
+        <div class="leg-item"><div class="leg-dot" style="background:#5DCAA5"></div>Social proof<span class="leg-pct">30%</span></div>
+        <div class="leg-item"><div class="leg-dot" style="background:#85B7EB"></div>Producto<span class="leg-pct">25%</span></div>
+        <div class="leg-item"><div class="leg-dot" style="background:#FAC775"></div>Founder<span class="leg-pct">20%</span></div>
+        <div class="leg-item"><div class="leg-dot" style="background:#AFA9EC"></div>El problema<span class="leg-pct">15%</span></div>
+        <div class="leg-item"><div class="leg-dot" style="background:#444441"></div>Tendencias<span class="leg-pct">10%</span></div>
+      </div>
+    </div>
+    <div class="chart-card">
+      <h3>LinkedIn</h3>
+      <div class="chart-role">Credibilidad B2B + thought leadership</div>
+      <div class="donut-wrap">
+        <svg width="90" height="90" viewBox="0 0 100 100">
+          <circle cx="50" cy="50" r="35" fill="none" stroke="#5DCAA5" stroke-width="15" stroke-dasharray="65.97 153.95" stroke-dashoffset="0" transform="rotate(-90 50 50)"/>
+          <circle cx="50" cy="50" r="35" fill="none" stroke="#85B7EB" stroke-width="15" stroke-dasharray="54.97 164.94" stroke-dashoffset="-65.97" transform="rotate(-90 50 50)"/>
+          <circle cx="50" cy="50" r="35" fill="none" stroke="#FAC775" stroke-width="15" stroke-dasharray="21.99 197.92" stroke-dashoffset="-120.94" transform="rotate(-90 50 50)"/>
+          <circle cx="50" cy="50" r="35" fill="none" stroke="#AFA9EC" stroke-width="15" stroke-dasharray="32.99 186.92" stroke-dashoffset="-142.93" transform="rotate(-90 50 50)"/>
+          <circle cx="50" cy="50" r="35" fill="none" stroke="#444441" stroke-width="15" stroke-dasharray="43.98 175.93" stroke-dashoffset="-175.92" transform="rotate(-90 50 50)"/>
+          <circle cx="50" cy="50" r="24" fill="#1e1830"/>
+        </svg>
+      </div>
+      <div class="leg">
+        <div class="leg-item"><div class="leg-dot" style="background:#5DCAA5"></div>Social proof<span class="leg-pct">30%</span></div>
+        <div class="leg-item"><div class="leg-dot" style="background:#85B7EB"></div>Producto<span class="leg-pct">25%</span></div>
+        <div class="leg-item"><div class="leg-dot" style="background:#FAC775"></div>Founder<span class="leg-pct">10%</span></div>
+        <div class="leg-item"><div class="leg-dot" style="background:#AFA9EC"></div>El problema<span class="leg-pct">15%</span></div>
+        <div class="leg-item"><div class="leg-dot" style="background:#444441"></div>Tendencias<span class="leg-pct">20%</span></div>
+      </div>
+    </div>
+    <div class="chart-card">
+      <h3>YouTube Shorts</h3>
+      <div class="chart-role">Reach + SEO · Repurpose de Reels</div>
+      <div class="donut-wrap">
+        <svg width="90" height="90" viewBox="0 0 100 100">
+          <circle cx="50" cy="50" r="35" fill="none" stroke="#85B7EB" stroke-width="15" stroke-dasharray="76.96 142.96" stroke-dashoffset="0" transform="rotate(-90 50 50)"/>
+          <circle cx="50" cy="50" r="35" fill="none" stroke="#5DCAA5" stroke-width="15" stroke-dasharray="54.97 164.94" stroke-dashoffset="-76.96" transform="rotate(-90 50 50)"/>
+          <circle cx="50" cy="50" r="35" fill="none" stroke="#FAC775" stroke-width="15" stroke-dasharray="43.98 175.93" stroke-dashoffset="-131.93" transform="rotate(-90 50 50)"/>
+          <circle cx="50" cy="50" r="35" fill="none" stroke="#AFA9EC" stroke-width="15" stroke-dasharray="43.98 175.93" stroke-dashoffset="-175.91" transform="rotate(-90 50 50)"/>
+          <circle cx="50" cy="50" r="24" fill="#1e1830"/>
+        </svg>
+      </div>
+      <div class="leg">
+        <div class="leg-item"><div class="leg-dot" style="background:#85B7EB"></div>Producto<span class="leg-pct">35%</span></div>
+        <div class="leg-item"><div class="leg-dot" style="background:#5DCAA5"></div>Social proof<span class="leg-pct">25%</span></div>
+        <div class="leg-item"><div class="leg-dot" style="background:#FAC775"></div>Founder<span class="leg-pct">20%</span></div>
+        <div class="leg-item"><div class="leg-dot" style="background:#AFA9EC"></div>El problema<span class="leg-pct">20%</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- SECTION: PILARES -->
+<section class="section" id="sec-pilares">
+<div class="container">
+  <div class="sec-eyebrow">5 pilares de contenido</div>
+  <h2 class="sec-title">Qué publicamos, para qué y cómo</h2>
+  <p class="sec-desc">Cada pilar tiene un objetivo de negocio claro, un tipo de audiencia principal y ejemplos concretos de piezas. No son temáticas genéricas — son direcciones editoriales con intención.</p>
+
+  <div class="pilar">
+    <div class="pilar-top"><span class="pilar-num">Pilar 01</span><span class="pilar-pct">15%</span></div>
+    <div class="pilar-name">The Phone Problem</div>
+    <span class="badge badge-reach" style="margin-bottom:12px; display:inline-block;">Objetivo: awareness + reach</span>
+    <div class="pilar-desc">Nombra el dolor antes de ofrecer la solución. No explica la tecnología — pone en escena un momento que todo operador reconoce: el rush del sábado, el host con las manos llenas, el teléfono que nadie puede atender. Es el hook de entrada para audiencias frías. Funciona mejor en Reels y como apertura de carruseles.</div>
+    <div class="pilar-divider"></div>
+    <div class="label" style="margin-bottom:10px;">Ejemplos de contenido</div>
+    <div class="ex-grid">
+      <div class="ex-row"><span class="ex-fmt">Reel</span><span class="ex-txt">"It's 7:30pm on a Friday. Your host is seating a party of 8. The phone rings. Nobody answers." — escena real, sin copy extra.</span></div>
+      <div class="ex-row"><span class="ex-fmt">Carrusel</span><span class="ex-txt">"The 4 moments restaurants lose the most revenue — and none of them happen at the table."</span></div>
+      <div class="ex-row"><span class="ex-fmt">Data card</span><span class="ex-txt">"62% of callers who reach voicemail don't call back. They book somewhere else."</span></div>
+      <div class="ex-row"><span class="ex-fmt">Story poll</span><span class="ex-txt">"Honest question: ¿cuántas llamadas perdiste esta semana sin saberlo?" — poll con opciones reales.</span></div>
+    </div>
+    <div class="tag-row"><span class="tag">Hook fuerte</span><span class="tag">Reels</span><span class="tag">Audiencias frías</span><span class="tag">No menciona IA</span></div>
+  </div>
+
+  <div class="pilar">
+    <div class="pilar-top"><span class="pilar-num">Pilar 02</span><span class="pilar-pct">25%</span></div>
+    <div class="pilar-name">Product in Action</div>
+    <span class="badge badge-conv" style="margin-bottom:12px; display:inline-block;">Objetivo: consideración + demos</span>
+    <div class="pilar-desc">Muestra el producto funcionando en condiciones reales. El AI suena natural, bilingüe, adaptado al restaurante. El objetivo no es impresionar con la tecnología sino demostrar que la experiencia del guest no se rompe. Prioridad en Reels de audio real y screen recordings.</div>
+    <div class="pilar-divider"></div>
+    <div class="label" style="margin-bottom:10px;">Ejemplos de contenido</div>
+    <div class="ex-grid">
+      <div class="ex-row"><span class="ex-fmt">Reel audio</span><span class="ex-txt">Llamada real al AI en un restaurante latino: "we can do that in English or Spanish — whatever works for you."</span></div>
+      <div class="ex-row"><span class="ex-fmt">Screen rec</span><span class="ex-txt">"What happens after every call" — dashboard mostrando la reserva confirmada e integración con el POS.</span></div>
+      <div class="ex-row"><span class="ex-fmt">Reel demo</span><span class="ex-txt">"We set up a new restaurant in 48 hours. Here's what that looks like." — onboarding real, time-lapse editorial.</span></div>
+      <div class="ex-row"><span class="ex-fmt">Carrusel</span><span class="ex-txt">"3 things guests hear when they call a HeyTruffle restaurant (vs. what they used to hear)."</span></div>
+    </div>
+    <div class="tag-row"><span class="tag">Audio real</span><span class="tag">Bilingual by design</span><span class="tag">Screen recordings</span><span class="tag">CTA a demo</span></div>
+  </div>
+
+  <div class="pilar">
+    <div class="pilar-top"><span class="pilar-num">Pilar 03</span><span class="pilar-pct">30%</span></div>
+    <div class="pilar-name">Operator Stories</div>
+    <span class="badge badge-conv" style="margin-bottom:12px; display:inline-block;">Objetivo: confianza + conversión</span>
+    <div class="pilar-desc">El operador es el protagonista, no el producto. Case studies reales con datos concretos. El formato ideal es el testimonio en primera persona donde el dueño cuenta el antes y el después en su propio lenguaje. Rreal Tacos como caso ancla.</div>
+    <div class="pilar-divider"></div>
+    <div class="label" style="margin-bottom:10px;">Ejemplos de contenido</div>
+    <div class="ex-grid">
+      <div class="ex-row"><span class="ex-fmt">Reel</span><span class="ex-txt">"We used to miss 40 calls a weekend. Now I don't even think about it." — dueño en cámara, dato real al final.</span></div>
+      <div class="ex-row"><span class="ex-fmt">Carrusel</span><span class="ex-txt">"Rreal Tacos: from 47 missed calls on Saturday to zero. Here's the full story."</span></div>
+      <div class="ex-row"><span class="ex-fmt">Data card</span><span class="ex-txt">"14,000 guests seated this month. Every reservation started with a phone call."</span></div>
+      <div class="ex-row"><span class="ex-fmt">LinkedIn</span><span class="ex-txt">Post de Lucas: "This operator told me something I'll never forget about what it means to trust a partner with your guests."</span></div>
+    </div>
+    <div class="tag-row"><span class="tag">Casos reales</span><span class="tag">Datos concretos</span><span class="tag">Video testimonial</span><span class="tag">LinkedIn prioritario</span></div>
+  </div>
+
+  <div class="pilar">
+    <div class="pilar-top"><span class="pilar-num">Pilar 04</span><span class="pilar-pct">20%</span></div>
+    <div class="pilar-name">Lucas / Founder Voice</div>
+    <span class="badge badge-brand" style="margin-bottom:12px; display:inline-block;">Objetivo: confianza + diferenciación bicultural</span>
+    <div class="pilar-desc">Lucas es el diferenciador que ningún competidor puede copiar. Su valor es ser alguien que entiende el mundo latino en US desde adentro, como operador y como founder. El contenido tiene que sonar como él, no como un guion. Hot takes sobre hospitality, perspectiva bicultural, historia del negocio sin filtro.</div>
+    <div class="pilar-divider"></div>
+    <div class="label" style="margin-bottom:10px;">Ejemplos de contenido</div>
+    <div class="ex-grid">
+      <div class="ex-row"><span class="ex-fmt">Reel</span><span class="ex-txt">"Nobody talks about this: restaurants built by Latino families in the US are running some of the tightest operations in the country. They just never got the tools designed for them."</span></div>
+      <div class="ex-row"><span class="ex-fmt">LinkedIn</span><span class="ex-txt">"Hot take: the hospitality industry doesn't have a technology problem. It has a priorities problem."</span></div>
+      <div class="ex-row"><span class="ex-fmt">Reel BTS</span><span class="ex-txt">Lucas con el equipo en onboarding de cliente. Sin guion, cámara al hombro. "This is what it actually looks like."</span></div>
+      <div class="ex-row"><span class="ex-fmt">Story Q&A</span><span class="ex-txt">Lucas respondiendo preguntas de operadores en tiempo real — formato informal, bilingual.</span></div>
+    </div>
+    <div class="tag-row"><span class="tag">Sin guion</span><span class="tag">Bicultural</span><span class="tag">LinkedIn engine</span><span class="tag">Hot takes</span></div>
+  </div>
+
+  <div class="pilar">
+    <div class="pilar-top"><span class="pilar-num">Pilar 05</span><span class="pilar-pct">10%</span></div>
+    <div class="pilar-name">Industry & Trends</div>
+    <span class="badge badge-engage" style="margin-bottom:12px; display:inline-block;">Objetivo: posicionamiento sectorial</span>
+    <div class="pilar-desc">Posiciona a HeyTruffle como marca con perspectiva propia sobre el sector. Prioritario para LinkedIn. En Fase 1 se mantiene bajo — cuando la audiencia crece, este contenido amplifica el posicionamiento. No antes.</div>
+    <div class="pilar-divider"></div>
+    <div class="label" style="margin-bottom:10px;">Ejemplos de contenido</div>
+    <div class="ex-grid">
+      <div class="ex-row"><span class="ex-fmt">Data card</span><span class="ex-txt">"Restaurant phone volume is up 18% since 2022. Staff levels haven't moved. Something has to give."</span></div>
+      <div class="ex-row"><span class="ex-fmt">Carrusel</span><span class="ex-txt">"What the best-run restaurants in the US have in common (it's not the menu)."</span></div>
+      <div class="ex-row"><span class="ex-fmt">LinkedIn</span><span class="ex-txt">"AI in restaurants: what's working, what's not, and what nobody's saying." — opinión de Lucas, no press release.</span></div>
+    </div>
+    <div class="tag-row"><span class="tag">LinkedIn first</span><span class="tag">Fase 2 en adelante</span><span class="tag">Datos del sector</span></div>
+  </div>
+</div>
+</section>
+
+<!-- SECTION: CANALES -->
+<section class="section" id="sec-canales">
+<div class="container">
+  <div class="sec-eyebrow">Ecosistema de canales</div>
+  <h2 class="sec-title">Rol, audiencia y frecuencia</h2>
+  <p class="sec-desc">Tres canales activos en el lanzamiento. Un análisis de nuevos canales (TikTok, X, etc.) está en proceso — los resultados se integran en la siguiente versión de esta estrategia.</p>
+
+  <div class="canal">
+    <div class="canal-head">
+      <div class="canal-head-name">Instagram</div>
+      <div class="canal-head-role">Canal principal · Reach + brand + social proof</div>
+    </div>
+    <div class="canal-body">
+      <div class="canal-meta">
+        <div><div class="label">Audiencia</div><div class="label-val">Founders y operadores latinos US. Discovery por Reels y hashtags del sector.</div></div>
+        <div><div class="label">Frecuencia Fase 3</div><div class="label-val">5 Reels + 3–4 feed + 7 stories / semana</div></div>
+        <div><div class="label">KPI principal</div><div class="label-val">Reach, seguidores nuevos, engagement rate</div></div>
+      </div>
+      <div class="divider"></div>
+      <div class="label" style="margin-bottom:10px;">Contenido prioritario</div>
+      <div class="canal-ex">
+        <div class="canal-ex-item">Reels de audio real del AI — el producto en acción, sin presentación forzada</div>
+        <div class="canal-ex-item">Talking heads de Lucas — sin guion, menos de 60 segundos</div>
+        <div class="canal-ex-item">Testimoniales en video de operadores — 30 segundos, dato real al cierre</div>
+        <div class="canal-ex-item">Stories diarias: BTS, polls, behind the scenes del onboarding</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="canal">
+    <div class="canal-head">
+      <div class="canal-head-name">LinkedIn Company + Lucas personal</div>
+      <div class="canal-head-role">Credibilidad B2B · Dos presencias con roles distintos</div>
+    </div>
+    <div class="canal-body">
+      <div class="canal-meta">
+        <div><div class="label">Audiencia</div><div class="label-val">COOs, Directors of Ops, grupos 10–100 locations. Inversores y prensa.</div></div>
+        <div><div class="label">Frecuencia</div><div class="label-val">Company: 2/semana. Lucas: 3/semana (drafts Folklore)</div></div>
+        <div><div class="label">KPI principal</div><div class="label-val">Reach de Lucas, inbound conexiones, demo requests</div></div>
+      </div>
+      <div class="divider"></div>
+      <div class="label" style="margin-bottom:10px;">División de roles</div>
+      <div class="canal-ex">
+        <div class="canal-ex-item">Company page: anuncios formales, case studies con métricas, repurpose de IG adaptado a tono B2B</div>
+        <div class="canal-ex-item">Lucas personal: hot takes de industria, historia bicultural, perspectiva de founder — tono directo</div>
+        <div class="canal-ex-item">Regla: lo que Lucas dice en personal no lo repite Company — son voces distintas, no duplicado</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="canal">
+    <div class="canal-head">
+      <div class="canal-head-name">YouTube Shorts</div>
+      <div class="canal-head-role">Reach + SEO · Repurpose automático de Reels</div>
+    </div>
+    <div class="canal-body">
+      <div class="canal-meta">
+        <div><div class="label">Audiencia</div><div class="label-val">Búsquedas activas: "restaurant AI", "AI host restaurant".</div></div>
+        <div><div class="label">Frecuencia</div><div class="label-val">= Reels de IG. Sin producción adicional.</div></div>
+        <div><div class="label">KPI principal</div><div class="label-val">Views, tráfico web, search ranking</div></div>
+      </div>
+      <div class="divider"></div>
+      <div class="label" style="margin-bottom:10px;">Oportunidad a mediano plazo</div>
+      <div class="canal-ex">
+        <div class="canal-ex-item">Hoy: repurpose automático, cero costo operativo extra</div>
+        <div class="canal-ex-item">Fase 3 en adelante: demos más largos (2–4 min) exclusivos para YouTube — el formato largo funciona para búsquedas de producto</div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- SECTION: MENSAJES -->
+<section class="section" id="sec-mensajes">
+<div class="container">
+  <div class="sec-eyebrow">Mensajes clave</div>
+  <h2 class="sec-title">Lo que debe quedar instalado</h2>
+  <p class="sec-desc">No son taglines — son las ideas que el operador tiene que llevarse después de ver nuestro contenido. Una por arquetipo, más un mensaje central que atraviesa todo.</p>
+
+  <div class="msg" style="border-color: var(--accent-border);">
+    <div class="msg-aud">Mensaje central · Todos los arquetipos</div>
+    <div class="msg-headline grad-text">"We run the phones. You run the restaurant."</div>
+    <div class="msg-body">División de roles clara. HeyTruffle no reemplaza personas ni agrega complejidad — se hace cargo de algo específico para que el operador pueda hacer lo que sabe hacer. Ownership mutuo. Partner, no vendor.</div>
+    <div class="msg-fmt">Concepto de campaña recomendado · Atraviesa todos los canales y formatos</div>
+  </div>
+
+  <div class="msg">
+    <div class="msg-aud">Arquetipo 1 · Founder Latino US (Miami, Atlanta, LA)</div>
+    <div class="msg-headline">"Nosotros atendemos el teléfono. Vos atendés el restaurante."</div>
+    <div class="msg-body">El español no es una traducción — es la lengua natural de la marca. Bilingual by design significa que el AI suena como parte del restaurante, no como un call center externo.</div>
+    <div class="msg-fmt">Formato prioritario: Lucas talking heads · Demos bilingüe · Rreal Tacos case study</div>
+  </div>
+
+  <div class="msg">
+    <div class="msg-aud">Arquetipo 2 · Growth Operator / COO (10–100 locations)</div>
+    <div class="msg-headline">"Scale your operations. Not your phone staff."</div>
+    <div class="msg-body">Para quien gestiona con data: resultados medibles, integración limpia, reporte claro. No es un producto más en el stack — es el que resuelve el punto ciego que ningún otro toca.</div>
+    <div class="msg-fmt">Formato prioritario: data cards · Case studies · LinkedIn thought leadership</div>
+  </div>
+
+  <div class="msg">
+    <div class="msg-aud">Arquetipo 3 · Family-Owned Operator (1–5 locations)</div>
+    <div class="msg-headline">"We answer every call the way you would."</div>
+    <div class="msg-body">No reemplazamos la hospitalidad humana — la extendemos. El AI suena cálido y adaptado a tu restaurante específico. Tus guests sienten que alguien los está atendiendo, porque alguien lo está haciendo.</div>
+    <div class="msg-fmt">Formato prioritario: audios reales del AI · BTS del onboarding · Testimoniales de dueños similares</div>
+  </div>
+</div>
+</section>
+
+<!-- SECTION: CONCEPTOS -->
+<section class="section" id="sec-conceptos">
+<div class="container">
+  <div class="sec-eyebrow">Conceptos de campaña</div>
+  <h2 class="sec-title">5 opciones para el lanzamiento</h2>
+  <p class="sec-desc">Todos están anclados al ADN real de la marca: ninguno menciona IA, ninguno suena a startup tech, todos hablan el idioma del operador de restaurante.</p>
+
+  <div class="concepto">
+    <div class="concepto-top"><span class="concepto-num">Concepto 01</span></div>
+    <div class="concepto-slogan">The floor is yours.<br>The phones are ours.</div>
+    <div class="divider"></div>
+    <div class="concepto-why">"The floor" es el corazón de cualquier restaurante — el espacio donde pasa la hospitalidad real. Una división de territorio precisa: vos dominás lo que importa, nosotros dominamos lo que te distrae. No dice IA, no dice automatización. Dice ownership compartido.</div>
+    <div class="tag-row"><span class="tag">ownership</span><span class="tag">hospitality first</span><span class="tag">restaurant-specific</span></div>
+    <div class="concepto-tone">Tono: confianza mutua. Adulto y específico del sector.</div>
+  </div>
+
+  <div class="concepto">
+    <div class="concepto-top"><span class="concepto-num">Concepto 02</span></div>
+    <div class="concepto-slogan">Full house. Zero missed calls.</div>
+    <div class="divider"></div>
+    <div class="concepto-why">"Full house" es la meta de todo operador. Pero también nombra el problema: cuando la casa está llena, nadie atiende el teléfono. Dos palabras del mundo real del operador + el resultado concreto que promete HeyTruffle. Corto, memorable, bicultural por naturaleza.</div>
+    <div class="tag-row"><span class="tag">capture what matters</span><span class="tag">resultado concreto</span><span class="tag">restaurant-native</span></div>
+    <div class="concepto-tone">Tono: directo, orientado a resultado. El más fácil de memorizar.</div>
+  </div>
+
+  <div class="concepto rec">
+    <div class="concepto-top">
+      <span class="concepto-num">Concepto 03</span>
+      <span class="badge badge-rec">Nuestra recomendación</span>
+    </div>
+    <div class="concepto-slogan grad-text">We run the phones.<br>You run the restaurant.</div>
+    <div class="divider"></div>
+    <div class="concepto-why">División de roles clara y sin ambigüedad. El operador es el protagonista. Funciona igual en inglés y español sin perder fuerza. Conecta directo con los cuatro valores del ADN: ownership, operational closeness, constant presence, tailored intelligence. Conecta con el funding story.</div>
+    <div class="tag-row"><span class="tag">ownership</span><span class="tag">constant presence</span><span class="tag">bilingual natural</span><span class="tag">conecta con funding</span></div>
+    <div class="concepto-tone">Tono: partnership entre iguales. Sin hype, sin tech.</div>
+  </div>
+
+  <div class="concepto">
+    <div class="concepto-top"><span class="concepto-num">Concepto 04</span></div>
+    <div class="concepto-slogan">Hospitality at the table.<br>Intelligence on the line.</div>
+    <div class="divider"></div>
+    <div class="concepto-why">"At the table" y "on the line" son expresiones del mundo de la hospitalidad. La mesa donde se vive la experiencia y la línea donde se captura la demanda. El único que nombra inteligencia, pero en el lugar correcto: al servicio de la hospitalidad, no como protagonista. El más sofisticado.</div>
+    <div class="tag-row"><span class="tag">hospitality first</span><span class="tag">tailored intelligence</span><span class="tag">doble significado</span><span class="tag">premium positioning</span></div>
+    <div class="concepto-tone">Tono: sofisticado, upscale. Habla al arquetipo 2 (COO, fine dining).</div>
+  </div>
+
+  <div class="concepto">
+    <div class="concepto-top"><span class="concepto-num">Concepto 05</span></div>
+    <div class="concepto-slogan">The reservation you almost missed —<br>we got it.</div>
+    <div class="divider"></div>
+    <div class="concepto-why">Específico, narrativo, habla de un momento real que todo operador vivió. No es tecnología — es el resultado exacto en el instante exacto. La reserva que se iba a perder. Ese micro-momento de alivio operativo es exactamente lo que HeyTruffle vende. Funciona como concepto de contenido y como slogan de campaña.</div>
+    <div class="tag-row"><span class="tag">micro-momento real</span><span class="tag">operational peace of mind</span><span class="tag">narrativo</span></div>
+    <div class="concepto-tone">Tono: alivio. La tranquilidad operativa en un instante concreto.</div>
+  </div>
+</div>
+</section>
+
+<!-- SECTION: REBRAND -->
+<section class="section" id="sec-rebrand">
+<div class="container">
+  <div class="sec-eyebrow">Lanzamiento del rebrand</div>
+  <h2 class="sec-title">De RestoHost a HeyTruffle</h2>
+  <p class="sec-desc">El rebrand no es un cambio cosmético — es una declaración de madurez. Coincide con el funding round. El lanzamiento tiene que contar una sola historia: la marca creció hasta el punto en que el nombre anterior ya no alcanzaba para decir lo que hace.</p>
+
+  <div class="obs green" style="margin-bottom:28px;">
+    <div class="obs-label">Concepto de campaña recomendado</div>
+    <p>"We run the phones. You run the restaurant." — el rebrand se presenta no como un cambio de identidad sino como una clarificación de propósito. HeyTruffle por fin tiene el nombre que describe exactamente lo que hace.</p>
+  </div>
+
+  <div class="phase-grid">
+    <div class="phase-card">
+      <div class="phase-num">Semana −1 · Teaser</div>
+      <div class="phase-title">El problema sin nombre</div>
+      <div class="phase-body">Escenas del rush del restaurante, el teléfono sonando, nadie disponible. Sin logo, sin contexto. Último frame: "July." Stories de countdown, solo tensión.</div>
+    </div>
+    <div class="phase-card">
+      <div class="phase-num">Launch day · Semana 1 julio</div>
+      <div class="phase-title">El anuncio</div>
+      <div class="phase-body">Reel principal de Lucas (60–90s): historia del por qué, el nombre, el funding. Post formal en LinkedIn Company. Email a clientes actuales antes del anuncio público. Meta Ads amplificando 48hs.</div>
+    </div>
+    <div class="phase-card">
+      <div class="phase-num">Semanas 2–4 · Post-launch</div>
+      <div class="phase-title">La prueba</div>
+      <div class="phase-body">Todo el contenido respalda el rebrand con evidencia: demos bajo la nueva identidad, case studies, presentación del equipo. La nueva identidad se vive, no se explica.</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+  <div class="sec-eyebrow" style="margin-bottom:14px;">Mensajes por canal en el launch</div>
+
+  <div class="canal">
+    <div class="canal-head"><div class="canal-head-name">Instagram</div></div>
+    <div class="canal-body">
+      <div class="canal-ex">
+        <div class="canal-ex-item">Reel principal: Lucas, storytelling del por qué del nuevo nombre. Emocional, sin guion, con el equipo.</div>
+        <div class="canal-ex-item">Stories: countdown la semana previa + reveal el día del lanzamiento + celebración con el equipo.</div>
+        <div class="canal-ex-item">Feed: primer post bajo la nueva identidad visual — que sea producto en acción, no solo branding.</div>
+      </div>
+    </div>
+  </div>
+  <div class="canal">
+    <div class="canal-head"><div class="canal-head-name">LinkedIn</div></div>
+    <div class="canal-body">
+      <div class="canal-ex">
+        <div class="canal-ex-item">Lucas personal: post largo sobre el funding y el rebrand juntos. Por qué este nombre, qué significa para la industria.</div>
+        <div class="canal-ex-item">Company page: anuncio formal, producto, proof points (20K calls/mes, 14K guests seated). Tono institucional pero humano.</div>
+      </div>
+    </div>
+  </div>
+  <div class="canal">
+    <div class="canal-head"><div class="canal-head-name">Meta Ads (Adstra)</div></div>
+    <div class="canal-body">
+      <div class="canal-ex">
+        <div class="canal-ex-item">Amplificar el Reel de Lucas las primeras 48 horas. Targeting: dueños de restaurantes en Miami, Atlanta, LA.</div>
+        <div class="canal-ex-item">Retargeting a visitors de RestoHost.com — ya conocen el producto, el rebrand es la razón para volver.</div>
+        <div class="canal-ex-item">Recomendación: separar línea de brand awareness del lanzamiento de la línea de performance habitual.</div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- SECTION: PAID -->
+<section class="section" id="sec-paid">
+<div class="container">
+  <div class="sec-eyebrow">Análisis de paid media</div>
+  <h2 class="sec-title">El problema que hay que nombrar</h2>
+  <p class="sec-desc">La estrategia orgánica es sólida. Pero hay una tensión estructural que impacta directamente en las metas: toda la pauta actual está orientada a leads, no a crecimiento de audiencia.</p>
+
+  <div class="card" style="margin-bottom:24px;">
+    <div class="label" style="margin-bottom:8px;">El diagnóstico</div>
+    <p style="font-size:14px; color:var(--text2); line-height:1.75;">Una cuenta que no crece orgánicamente necesita paid para crecer. Si el paid solo mira leads, la cuenta social se convierte en un activo estancado. Un COO que recibe una propuesta de HeyTruffle y va a ver el Instagram con 1.200 seguidores descuenta credibilidad antes de hablar con ventas. El canal social es parte del funnel de confianza, aunque no genere leads directos.</p>
+  </div>
+
+  <table class="ptable">
+    <thead>
+      <tr>
+        <th>Línea de pauta</th>
+        <th>Objetivo</th>
+        <th>Momento</th>
+        <th>Recomendación</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Performance (actual)</td>
+        <td>Leads, demo requests</td>
+        <td>Siempre activa</td>
+        <td>Mantener. Optimizar con los nuevos creativos del rebrand.</td>
+      </tr>
+      <tr>
+        <td>Brand & growth</td>
+        <td>Seguidores IG, reach, awareness</td>
+        <td>Primeros 30 días post-launch</td>
+        <td>Activar con USD 500–800. Amplificar Reel de Lucas. Momento de mayor atención = menor costo por seguidor.</td>
+      </tr>
+      <tr>
+        <td>Retargeting</td>
+        <td>Reactivación de leads fríos</td>
+        <td>Semanas 2–4 post-launch</td>
+        <td>Usar creativos del rebrand para reactivar contactos de RestoHost que no convirtieron.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="obs amber" style="margin-top:24px;">
+    <div class="obs-label">Sobre las metas de crecimiento orgánico</div>
+    <p>La meta de 3.500 seguidores en IG en 90 días desde 1.170 es alcanzable solo si hay paid support en el lanzamiento. Sin ese impulso, el crecimiento orgánico realista ronda 1.800–2.200 seguidores. Recomendamos revisar las metas floor/target/stretch con este contexto antes de presentarlas como compromisos.</p>
+  </div>
+  <div class="obs green">
+    <div class="obs-label">La oportunidad concreta</div>
+    <p>El lanzamiento del rebrand + funding es el momento de mayor atención orgánica que va a tener la marca en mucho tiempo. USD 500–800 de paid en ese pico rinden 3–4x más que el mismo presupuesto en cualquier otro momento del año. No es un gasto de branding — es aprovechar el momentum que ya existe.</p>
+  </div>
+</div>
+</section>
+
+<!-- SECTION: OBS -->
+<section class="section" id="sec-obs">
+<div class="container">
+  <div class="sec-eyebrow">Mirada de Folklore</div>
+  <h2 class="sec-title">Observaciones profesionales</h2>
+  <p class="sec-desc">Lo que está bien fundado, lo que necesita ajuste, y lo que hay que decir aunque sea incómodo.</p>
+
+  <div class="obs green"><div class="obs-label">Lo que está muy bien planteado</div><p>La estructura de fases de producción es realista y protege la calidad. El enfoque Reels-first está bien justificado con data. Los buyer personas son específicos y accionables. Y la decisión de poner a Lucas como voz es la más acertada de toda la estrategia — es el diferenciador que ningún competidor puede replicar.</p></div>
+  <div class="obs green"><div class="obs-label">El diferencial bicultural es la historia real</div><p>Ningún competidor (Slang.ai, Loman AI) puede reclamar ser bicultural, bilingüe y latino de origen. Eso no es un detalle de ejecución — es el posicionamiento estratégico más poderoso que tiene HeyTruffle. Toda la estrategia de contenido tiene que hacer eso visible, no asumirlo.</p></div>
+  <div class="obs amber"><div class="obs-label">El proceso de aprobación no está definido</div><p>Para llegar a 25 piezas/semana en Fase 3 necesitamos un proceso claro: quién aprueba, en qué plazo, con qué criterios. Sin eso, el volumen colapsa del lado del cliente. Es el ask más importante antes de arrancar.</p></div>
+  <div class="obs amber"><div class="obs-label">El primer shoot day es el punto crítico</div><p>Todo el volumen de Reels depende de stock de video de Lucas. Si el Shoot Day 1 no está programado en los próximos 10 días, la Fase 1 arranca sin material. No hay workaround para esto.</p></div>
+  <div class="obs amber"><div class="obs-label">Industry & Trends: no en Fase 1</div><p>Recomendamos mover el 10% de tendencias a social proof durante las primeras 4 semanas. Con una cuenta nueva, el contenido de industria no tiene contexto todavía. Ese pilar crece una vez que hay audiencia establecida.</p></div>
+  <div class="obs red"><div class="obs-label">Las metas necesitan revisarse con honestidad</div><p>La meta target de 3.500 seguidores en 90 días no es realista sin paid de awareness. Presentarla sin aclarar ese supuesto crea expectativas que el orgánico solo no puede cumplir. Las dos cosas no pueden ser verdad al mismo tiempo: metas agresivas y cero paid support de brand.</p></div>
+</div>
+</section>
+
+<div style="height:80px;"></div>
+
+<script>
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('sec-' + id).classList.add('active');
+  event.currentTarget.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
